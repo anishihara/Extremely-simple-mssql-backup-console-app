@@ -11,12 +11,22 @@ namespace SqlBackup
     {
         static void Main(string[] args)
         {
-            if (args.Length != 3) return;
+            if (args.Length != 2 && args.Length != 3) return;
+            
             string serverName = args[0];
             string database = args[1];
-            string filePath = args[2];
+            string filePath;
 
             Server srv = new Server(@serverName);
+            if (args.Length == 3)
+            {
+                filePath = args[2];
+            }
+            else
+            {
+                filePath = srv.BackupDirectory;
+            }
+
             Backup backup = new Backup();
 
             // specify what you want to backup
@@ -24,7 +34,7 @@ namespace SqlBackup
 
             // specify the name of the database
             backup.Database = database;
-            
+
             // specify what kind of devides to use, in this example we are using the File Device
             backup.Devices.AddDevice(@filePath, DeviceType.File);
             backup.BackupSetName = "Example database backup";
